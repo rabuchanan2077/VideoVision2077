@@ -1,0 +1,9 @@
+org.usfirst.frc.team2077.video
+org.usfirst.frc.team2077.video.core
+org.usfirst.frc.team2077.video.interfaces
+org.usfirst.frc.team2077.video.projections
+org.usfirst.frc.team2077.video.sources
+org.usfirst.frc.team2077.video.test
+org.usfirst.frc.team2077.vision
+org.usfirst.frc.team2077.vision.processors
+org.usfirst.frc.team2077.vvcommon
