@@ -140,7 +140,12 @@ public class CompositeView implements VideoView {
             jComponent_.setOpaque(true);
             jComponent_.setBackground(Color.black);
             jComponent_.setPreferredSize(resolution_);
-            for (VideoView view : getViews()) {
+//            for (VideoView view : getViews()) {
+//                JComponent component = view.getJComponent();
+//                componentBounds_.put(component, viewBounds_.get( view.getName()));
+//            }
+            for (String viewName : viewBounds_.keySet()) {
+                VideoView view = Main.getView(viewName);
                 JComponent component = view.getJComponent();
                 componentBounds_.put(component, viewBounds_.get( view.getName()));
             }
@@ -153,7 +158,7 @@ public class CompositeView implements VideoView {
         if (views_.isEmpty()) {
             for (String viewName : viewBounds_.keySet()) {
                 VideoView view = Main.getView(viewName);
-                views_.add(view);
+                views_.addAll(view.getViews());
             }
         }
         return views_;

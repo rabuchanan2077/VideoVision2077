@@ -71,6 +71,14 @@ public final class MjpegSource extends AbstractSource implements VideoSource {
                     for ( int b = iis.read(); networkThread_ == this && b != -1; b = iis.read() ) {
                         if ( haveJpgHeader && b == 255 ) {
                             iis.unread( b );
+                            
+                            
+                            //System.out.println(">$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");                            
+                            //System.out.println(headerWriter.toString());                            
+                            //System.out.println("<$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");                            
+                            
+                            
+                            
                             header = headerWriter.toString().toUpperCase();
                             headerWriter = new StringWriter();
                             haveJpgHeader = false;

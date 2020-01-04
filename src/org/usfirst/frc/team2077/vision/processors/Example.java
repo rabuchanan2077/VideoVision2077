@@ -6,7 +6,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-import org.usfirst.frc.team2077.vision.VisionMain.FrameProcessor;
+import org.usfirst.frc.team2077.vision.Main.FrameProcessor;
 
 public class Example implements FrameProcessor {
 

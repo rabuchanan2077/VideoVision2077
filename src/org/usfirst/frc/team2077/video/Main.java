@@ -44,15 +44,17 @@ public class Main {
 
     public static final Logger logger_ = Logger.getLogger(Main.class.getName());
 
-    private static Properties properties_;
+    protected static Properties properties_;
 
-    private static ByteOrder byteOrder_;
+    protected static ByteOrder byteOrder_;
 
-    private static AtomicInteger frames_ = new AtomicInteger();
+    protected static AtomicInteger frames_ = new AtomicInteger();
 
-    private static Map<String, VideoSource> sources_ = new LinkedHashMap<>();
-    private static Map<String, VideoView> views_ = new LinkedHashMap<>();
-    private static Collection<VideoView> mappedViews_ = new HashSet<>();
+    protected static Map<String, VideoSource> sources_ = new LinkedHashMap<>();
+    protected static Map<String, VideoView> views_ = new LinkedHashMap<>();
+    protected static Collection<VideoView> mappedViews_ = new HashSet<>();
+    
+    protected static JFrame videoFrame_;
 
     /**
      * @param args List of configuration property paths. Each path may be either an external
@@ -60,37 +62,7 @@ public class Main {
      */
     public static void main(String[] args) {
         
-        properties_ = Utilities.readProperties(args);
-         
-        String bo = properties_.getProperty("byte-order");
-        // TODO: tested only for LE
-        byteOrder_ = "BE".equalsIgnoreCase(bo) ? ByteOrder.BIG_ENDIAN : "LE".equalsIgnoreCase(bo) ? ByteOrder.LITTLE_ENDIAN : ByteOrder.nativeOrder();
-        // TODO: check BufferedImage byte order
-        
-        initSources();
-        
-        initViews();
-        
-        startSources();
-
-        // frame rate monitor
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                logger_.log(Level.INFO, "FPS:" + frames_.getAndSet(0) / 10);
-            }
-        }, 10000, 10000);
-
-        final JFrame videoFrame_ = new JFrame("Video");
-        videoFrame_.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        videoFrame_.addWindowListener(new WindowAdapter() {
-            @Override
-			public void windowClosing(WindowEvent we) {
-                for (VideoSource vs : sources_.values()) {
-                    vs.stop();
-                }
-            }
-        });
+        init(args);
         
         JToggleButton button0 = null;
         JComponent panel = new JPanel(new GridLayout(0,2));
@@ -135,6 +107,46 @@ public class Main {
         
         videoFrame_.pack();
         videoFrame_.setVisible(true);
+    }
+
+
+    /**
+     * @param args List of configuration property paths. Each path may be either an external
+     * file path or a resource name where "resources/" + name + ".properties" is in java.class.path.
+     */
+    protected static void init(String[] args) {
+        
+        properties_ = Utilities.readProperties(args);
+         
+        String bo = properties_.getProperty("byte-order");
+        // TODO: tested only for LE
+        byteOrder_ = "BE".equalsIgnoreCase(bo) ? ByteOrder.BIG_ENDIAN : "LE".equalsIgnoreCase(bo) ? ByteOrder.LITTLE_ENDIAN : ByteOrder.nativeOrder();
+        // TODO: check BufferedImage byte order
+        
+        initSources();
+        
+        initViews();
+        
+        startSources();
+
+        // frame rate monitor
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                logger_.log(Level.INFO, "FPS:" + frames_.getAndSet(0) / 10);
+            }
+        }, 10000, 10000);
+
+        videoFrame_ = new JFrame("Video");
+        videoFrame_.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        videoFrame_.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                for (VideoSource vs : sources_.values()) {
+                    vs.stop();
+                }
+            }
+        });
     }
 
     private static void initSources() {

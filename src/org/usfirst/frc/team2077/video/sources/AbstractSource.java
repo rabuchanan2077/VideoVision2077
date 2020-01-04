@@ -288,7 +288,8 @@ public abstract class AbstractSource implements VideoSource {
             @Override
             public void run() {
                 long time = System.currentTimeMillis() - execBaseTime_;
-                if ( (time > (6 * 1000)) && (exec_ != null) ) {
+                //if ( (time > (6 * 1000)) && (exec_ != null) ) {
+                if ( (time > (30 * 1000)) && (exec_ != null) ) {
                     System.out.println( "WARNING:" + name_ + ": Frame update timeout (" + (time / 1000) + " sec) @ " + remote_ + "." );
                     exec_ = null;
                     synchronized ( execLock_ ) {

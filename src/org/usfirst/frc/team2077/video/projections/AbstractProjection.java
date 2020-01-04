@@ -124,7 +124,10 @@ public abstract class AbstractProjection implements SourceProjection, RenderingP
         // cc(+)/cw rotation
         double yawCorrection = Double.parseDouble(Main.getProperties().getProperty(name_ + ".camera-yaw-correction", "0"));
 
-        double[][] actualToNominal = rotateXYZ(-yawCorrection, -pitchCorrection, -rollCorrection);
+        // TODO: mostly tested with this...
+        //double[][] actualToNominal = rotateXYZ(-yawCorrection, -pitchCorrection, -rollCorrection);
+        // TODO: ... but this may be better
+        double[][] actualToNominal = rotateZYX(-rollCorrection, -pitchCorrection, -yawCorrection);
         
         backTransformGlobal_ = multiply(actualToNominal, nominalToGlobal);
         //backTransformGlobal_ = multiply(nominalToGlobal, actualToNominal);
@@ -326,10 +329,10 @@ public abstract class AbstractProjection implements SourceProjection, RenderingP
      * @return Focal length if explicitly set, or as computed from horizontal FOV.
      */
     public double getFocalLength() {
-    	if (focalLength_ > 0) {
-    		return focalLength_;
-    	}
-    	return 1 / forwardProjection(fovAngleHorizontal_/2);
+        if (focalLength_ > 0) {
+                return focalLength_;
+        }
+        return 1 / forwardProjection(fovAngleHorizontal_/2);
     }
 
     @Override
@@ -586,5 +589,16 @@ public abstract class AbstractProjection implements SourceProjection, RenderingP
      */
     public static double[][] rotateXYZ(double degreesX, double degreesY, double degreesZ) {
         return multiply(rotateX(degreesX), multiply(rotateY(degreesY), rotateZ(degreesZ)));
+    }
+    
+    /**
+     * Constructs a 3D rotation matrix.
+     * @param degreesZ Degrees rotation about Z axis.
+     * @param degreesY Degrees rotation about Y axis.
+     * @param degreesX Degrees rotation about X axis.
+     * @return <code>rotateX(degreesX) X rotateY(degreesY) X rotateZ(degreesZ)</code>
+     */
+    public static double[][] rotateZYX(double degreesZ, double degreesY, double degreesX) {
+        return multiply(rotateZ(degreesZ), multiply(rotateY(degreesY), rotateX(degreesX)));
     }
 }
